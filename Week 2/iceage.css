@@ -33,7 +33,7 @@ body, html {
 .wheel {
     width: 150px;
     height: 150px;
-    background-image: url('/Users/yarenakdogan/Desktop/iceageweb/A8A00259-5A38-4C0C-91EB-41FAD93BB06D.PNG');
+    background-image: url('/Users/yarenakdogan/Ceng382_25_26_202111046/Week 2/A8A00259-5A38-4C0C-91EB-41FAD93BB06D.PNG');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -285,7 +285,7 @@ button.wheel {
 
 /* Sol Üst Görsel */
 .top-left-image {
-    background-image: url('/Users/yarenakdogan/Desktop/iceageweb/98F1EBB7-6ACD-423F-A334-4D49F24C718F.PNG'); 
+    background-image: url('/Users/yarenakdogan/Ceng382_25_26_202111046/Week 2/98F1EBB7-6ACD-423F-A334-4D49F24C718F.PNG'); 
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
@@ -399,3 +399,4 @@ button.wheel {
 .snowflake {
     animation: snowfall linear infinite;
 }
+

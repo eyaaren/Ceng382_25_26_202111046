@@ -40,13 +40,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
     wheelButton.addEventListener('click', function() {
         wheelButton.classList.add('fall'); 
-        
+    
         setTimeout(() => {
             loginModal.style.display = "flex"; 
             startAnimations();  
             startSnowfall();    
         }, 1000);
     });
+    
 
     function startAnimations() {
         if (animationsRunning) return;  
@@ -103,8 +104,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function closeModal() {
         loginModal.style.display = "none";
         video.pause();
-        video.currentTime = 0;
-        playPauseButton.innerText = "Tekerlek Buton"; 
+        video.currentTime = 0;;
         wheelButton.classList.remove('fall');
 
         resetImageAnimations();
@@ -151,22 +151,34 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     setInterval(updateClock, 1000);
 
-    document.addEventListener("keydown", function (event) {
-        if (event.key === "h" || event.key === "H") {
-            hidden = !hidden;
-    
-            // Sadece modal'ı gizle, diğer öğeleri bırak
-            loginModal.style.display = hidden ? "none" : "flex";
+    const snowflakeButton = document.querySelector('.snowflake-button');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+
+    snowflakeButton.addEventListener("click", function(event) {
+        event.preventDefault();
+        
+        // Çift tıklama engelleme (butona tekrar tıklanmasını engelle)
+        if (snowflakeButton.classList.contains('clicked')) {
+            return;
         }
+    
+        // "clicked" sınıfını ekle ve 1 saniye sonra kaldır
+        snowflakeButton.classList.add('clicked');
+        setTimeout(() => {
+            snowflakeButton.classList.remove('clicked');
+        }, 1000); // 1 saniye sonra tekrar tıklamayı etkinleştirir
+    
+        if (usernameInput.value.trim() === "" || passwordInput.value.trim() === "") {
+            alert("Please fill in username and password!");
+            return;
+        }
+        
+        document.getElementById('loginModal').style.display = 'none';
+        
+        setTimeout(() => {
+            window.location.href = 'classlist.html';
+        }, 100);
     });
-
-    // Global kullanıcı bilgilerini diziye ekleme
-    document.getElementById("login-btn").addEventListener("click", function (event) {
-        event.preventDefault(); // Formun otomatik olarak submit olmasını engeller
-
-        let username = document.getElementById("username").value;
-        let password = document.getElementById("password").value;
-        users.push({ username, password });
-        console.log("Kullanıcılar:", users);
-    });
+    
 });

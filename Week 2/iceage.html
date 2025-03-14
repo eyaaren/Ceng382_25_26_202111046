@@ -15,7 +15,7 @@
     <!-- Arka planda video -->
     <div class="background">
         <video id="background-video" muted>
-            <source src="/Users/yarenakdogan/Desktop/iceageweb/ScreenRecording_03-02-2025-16-34-24_1.mp4" type="video/mp4">
+            <source src="/Users/yarenakdogan/Ceng382_25_26_202111046/Week 2/ScreenRecording_03-02-2025-16-34-24_1.mp4" type="video/mp4">
         </video>
     </div>
 
@@ -87,5 +87,16 @@
     <div class="snowflake"></div>
 
     <script src="iceage.js"></script> 
+
+    <!-- Giriş işlemi sonrası yönlendirme scripti -->
+    <script>
+        document.getElementById('loginModal').addEventListener('submit', function(event) {
+            event.preventDefault(); // Formun varsayılan gönderilmesini engelle
+
+            // Giriş her durumda başarılı sayılacak, kullanıcı adı ve şifre kontrolü yapılmaz
+            document.getElementById('loginModal').style.display = 'none'; // Login modalını kapat
+            window.location.href = 'classlist.html'; // classlist.html sayfasına yönlendir
+        });
+    </script>
 </body>
 </html>

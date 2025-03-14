@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Class List</title>
+   <!-- Font Awesome CDN (Opsiyonel) -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+   <link href="https://fonts.googleapis.com/css2?family=Slackey&display=swap" rel="stylesheet">
+
+   <style>
+     /* Slackey fontunu tüm sayfada uygulama */
+     * {
+       font-family: 'Slackey', cursive !important; /* Tüm elementlerde Slackey fontu */
+     }
+
+     body {
+       background-image: url('/Users/yarenakdogan/Ceng382_25_26_202111046/Week 2/iceagesid.jpg'); /* Arka plan görseli */
+       background-size: cover; /* Görseli tüm ekranı kaplayacak şekilde ayarlama */
+       background-position: center center; /* Görselin hem yatay hem dikey olarak ortalanması */
+       background-attachment: fixed; /* Sayfa kaydırıldığında arka planın sabit kalması */
+       padding: 0;
+       margin: 0; /* Sayfanın dışındaki boşlukları sıfırlama */
+       height: 100vh; /* Sayfanın tüm yüksekliğini kapsayacak şekilde */
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       flex-direction: column; /* İçerikleri dikeyde ortala */
+     }
+
+     .container {
+       text-align: center;
+       max-width: 800px; /* Form ve başlık için maksimum genişlik */
+       width: 100%;
+     }
+
+     table {
+       width: 80%;
+       margin-top: 20px;
+       border-collapse: collapse;
+       font-size: 14px; /* Table font boyutunu küçültme */
+     }
+
+     th, td {
+       padding: 10px;
+       text-align: left;
+       border: 1px solid #ddd;
+     }
+
+     th {
+       background-color: #4c53afb2;
+       color: white;
+       cursor: pointer; /* Başlık hücresine tıklanabilirlik ekliyoruz */
+     }
+
+     input[type="text"], input[type="number"] {
+       padding: 10px;
+       width: 200px;
+       margin: 10px;
+       border: 1px solid #ccc;
+       border-radius: 5px;
+     }
+
+     button {
+       padding: 10px 20px;
+       background-color: #4c53afa2;
+       color: white;
+       border: none;
+       border-radius: 5px;
+       cursor: pointer;
+     }
+
+     button:hover {
+       background-color: #45a049;
+     }
+
+     .delete-btn {
+       background-color: rgba(255, 0, 0, 0.555);
+       color: white;
+       border: none;
+       padding: 5px 10px;
+       cursor: pointer;
+       border-radius: 5px;
+     }
+
+     .delete-btn:hover {
+       background-color: #d32f2f;
+     }
+
+     /* Modal Stil */
+     .modal {
+       display: none; /* Başlangıçta gizli */
+       position: fixed;
+       z-index: 1;
+       left: 0;
+       top: 0;
+       width: 100%;
+       height: 100%;
+       overflow: auto;
+       background-color: rgba(0,0,0,0.4);
+       padding-top: 60px;
+     }
+
+     .modal-content {
+       background-color: #fefefe;
+       margin: 5% auto;
+       padding: 20px;
+       border: 1px solid #888;
+       width: 80%;
+       max-width: 600px;
+     }
+
+     .close {
+       color: #aaa;
+       float: right;
+       font-size: 28px;
+       font-weight: bold;
+     }
+
+     .close:hover,
+     .close:focus {
+       color: black;
+       text-decoration: none;
+       cursor: pointer;
+     }
+   </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Class Information</h2>
+    <form id="class-form">
+      <input type="text" id="class-name" placeholder="Class Name" required>
+      <input type="number" id="number-of-people" placeholder="Number of People" required>
+      <input type="text" id="description" placeholder="Description" required>
+      <button type="submit">Add Class</button>
+      <button type="button" id="update-btn" style="display:none;">Update Class</button>
+    </form>
+
+    <h3>Class Table</h3>
+    <table id="class-table">
+      <thead>
+        <tr>
+          <th>Class Name</th>
+          <th>Number of People</th>
+          <th>Description</th>
+          <th>Action</th> <!-- Yeni silme butonu sütunu -->
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Tablo verileri buraya eklenecek -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal -->
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Class Details</h2>
+      <table id="modal-table">
+        <tr><td>Class Name:</td><td id="modal-class-name"></td></tr>
+        <tr><td>Number of People:</td><td id="modal-number-of-people"></td></tr>
+        <tr><td>Description:</td><td id="modal-description"></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    let currentRow = null;
+
+    // Modal açma fonksiyonu
+    var modal = document.getElementById("myModal");
+    var span = document.getElementsByClassName("close")[0];
+
+    // Modal'ı kapatma
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+
+    // Modal dışına tıklanarak kapatma
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+
+    // Sınıf bilgileri tablosunu dinamik olarak güncelleme
+    document.getElementById('class-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      var className = document.getElementById('class-name').value;
+      var numberOfPeople = document.getElementById('number-of-people').value;
+      var description = document.getElementById('description').value;
+
+      var table = document.getElementById('class-table').getElementsByTagName('tbody')[0];
+      var newRow = table.insertRow(table.rows.length);
+
+      var cell1 = newRow.insertCell(0);
+      var cell2 = newRow.insertCell(1);
+      var cell3 = newRow.insertCell(2);
+      var cell4 = newRow.insertCell(3); // Silme butonu için yeni bir hücre
+
+      cell1.textContent = className;
+      cell2.textContent = numberOfPeople;
+      cell3.textContent = description;
+
+      // Silme butonu ekleme
+      var deleteButton = document.createElement('button');
+      deleteButton.textContent = 'X';
+      deleteButton.classList.add('delete-btn');
+      deleteButton.addEventListener('click', function() {
+        table.deleteRow(newRow.rowIndex - 1); // Satırı silme
+      });
+
+      cell4.appendChild(deleteButton);
+
+      // Satıra tıklanıldığında güncelleme için işlevi ekle
+      newRow.addEventListener('click', function() {
+        currentRow = newRow;
+        document.getElementById('class-name').value = className;
+        document.getElementById('number-of-people').value = numberOfPeople;
+        document.getElementById('description').value = description;
+        document.getElementById('update-btn').style.display = 'inline-block';
+        document.getElementById('update-btn').addEventListener('click', updateClass);
+      });
+
+      // Satıra çift tıklama ile modal gösterme
+      newRow.addEventListener('dblclick', function() {
+        document.getElementById('modal-class-name').textContent = className;
+        document.getElementById('modal-number-of-people').textContent = numberOfPeople;
+        document.getElementById('modal-description').textContent = description;
+        modal.style.display = "block";
+      });
+
+      // Formu sıfırlamak
+      document.getElementById('class-form').reset();
+    });
+
+    // Güncelleme işlemi
+    function updateClass() {
+      var className = document.getElementById('class-name').value;
+      var numberOfPeople = document.getElementById('number-of-people').value;
+      var description = document.getElementById('description').value;
+
+      // Seçilen satırı güncelle
+      currentRow.cells[0].textContent = className;
+      currentRow.cells[1].textContent = numberOfPeople;
+      currentRow.cells[2].textContent = description;
+
+      // Güncelleme butonunu gizle
+      document.getElementById('update-btn').style.display = 'none';
+      document.getElementById('class-form').reset();
+      currentRow = null; // Satırı sıfırla
+    }
+
+    // JavaScript olayları
+    // 1. Input focus olayı
+    var inputs = document.querySelectorAll('input');
+    inputs.forEach(function(input) {
+      input.addEventListener('focus', function() {
+        input.style.borderColor = '#4CAF50'; // Fokusa alındığında border rengini değiştirme
+      });
+      input.addEventListener('blur', function() {
+        input.style.borderColor = '#ccc'; // Focus çıktığında border rengini eski haline getirme
+      });
+    });
+
+    // 2. Tablo başlıklarına tıklama olayları
+    var table = document.getElementById('class-table');
+    var headers = table.querySelectorAll('th');
+    headers.forEach(function(header, index) {
+      header.addEventListener('click', function() {
+        var rows = Array.from(table.querySelectorAll('tbody tr'));
+        var isNumeric = index === 1; // Number of People sütunu sayısal olduğu için
+        var sortedRows;
+
+        if (isNumeric) {
+          // Sayısal sıralama
+          sortedRows = rows.sort(function(a, b) {
+            var aText = a.cells[index].textContent;
+            var bText = b.cells[index].textContent;
+            return parseInt(aText) - parseInt(bText);
+          });
+        } else {
+          // Metin sıralama
+          sortedRows = rows.sort(function(a, b) {
+            var aText = a.cells[index].textContent.toLowerCase();
+            var bText = b.cells[index].textContent.toLowerCase();
+            return aText.localeCompare(bText);
+          });
+        }
+
+        // Sıralı satırları yeniden yerleştirme
+        sortedRows.forEach(function(row) {
+          table.querySelector('tbody').appendChild(row);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
