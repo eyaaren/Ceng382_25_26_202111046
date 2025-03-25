@@ -1,10 +1,93 @@
 ﻿@page
-@model IndexModel
+@model RazorPagesProject.Pages.IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- Bootstrap Icons kütüphanesini dahil et -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Add New Class Form -->
+        <div class="col-md-6">
+            <h2>Add a New Class</h2>
+            <form method="post" asp-page="Index">
+                <div class="form-group">
+                    <label for="ClassName">Class Name</label>
+                    <input type="text" id="ClassName" name="ClassName" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label for="StudentCount">Student Count</label>
+                    <input type="number" id="StudentCount" name="StudentCount" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label for="Description">Description</label>
+                    <textarea id="Description" name="Description" class="form-control" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Add Class</button>
+            </form>
+        </div>
+
+        <!-- Class List Table -->
+        <div class="col-md-6">
+            <h2>Class List</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Class Name</th>
+                        <th>Student Count</th>
+                        <th>Description</th>
+                        <th>Edit</th> <!-- Yeni kolon (Edit) -->
+                        <th>Delete</th> <!-- Yeni kolon (Delete) -->
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var classInfo in Model.ClassList)
+                    {
+                        <tr>
+                            <td>@classInfo.Id</td>
+                            <td>@classInfo.ClassName</td>
+                            <td>@classInfo.StudentCount</td>
+                            <td>@classInfo.Description</td>
+                            <td>
+                                <!-- Edit ikonu (Bootstrap Icons veya Font Awesome) -->
+                                <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#editModal" data-id="@classInfo.Id">
+                                    <i class="bi bi-pencil" style="color: #28a745;"></i> <!-- Yeşil Edit ikonu -->
+                                </button>
+                            </td>
+                            <td>
+                                <!-- Delete ikonu -->
+                                <button class="btn btn-sm" data-id="@classInfo.Id">
+                                    <i class="bi bi-trash" style="color: #e74c3c;"></i> <!-- Kırmızı Delete ikonu -->
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+
+<style>
+    /* Edit ve Delete butonlarına arka plan eklenmesini engelleme */
+    .btn {
+        background-color: transparent; /* Arka planı kaldır */
+        border: none; /* Sınırı kaldır */
+        padding: 0; /* Padding'i sıfırla */
+    }
+
+    .btn i {
+        font-size: 1.25rem; /* İkon boyutunu büyüt */
+    }
+
+    .btn:hover {
+        cursor: pointer; /* Butona tıklanabilirlik efekti */
+    }
+
+    .btn-sm {
+        font-size: 1rem; /* Küçük boyutlu buton */
+    }
+</style>

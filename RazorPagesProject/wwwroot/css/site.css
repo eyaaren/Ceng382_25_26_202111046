@@ -1,5 +1,8 @@
+/* Sayfa Genel Renk ve Yazı Tipi */
 html {
   font-size: 14px;
+  font-family: 'Arial', sans-serif; /* Daha modern bir font ekledik */
+  background-color: #f4f7fc; /* Hafif gri-mavi arka plan */
 }
 
 @media (min-width: 768px) {
@@ -8,24 +11,92 @@ html {
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+/* Buton Stili */
+.btn {
+  background-color: #007f04; /* Ana renk mavi */
+  color: white; /* Yazı rengi beyaz */
+  border-radius: 5px; /* Köşeleri yuvarlat */
+  padding: 10px 20px; /* Butonun iç padding değerini ayarladık */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Geçiş efekti ekledik */
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+.btn:hover {
+  background-color: #49a800; /* Hover durumunda daha koyu mavi */
 }
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #007bff; /* Buton focus rengini değiştirdik */
+}
+
+/* Sayfa Arka Planı ve Margin */
+html, body {
+  height: 100%; /* Sayfanın tamamını kapsar */
+  min-height: 100%; /* Sayfa minimum yüksekliği */
+  font-size: 14px;
+  font-family: 'Arial', sans-serif;
+ /* Hafif gri-mavi arka plan */
+}
+
 
 body {
   margin-bottom: 60px;
+  background-color: #96ce7c94; /* Beyaz arka plan */
+  color: #2a2a2a; /* Koyu gri metin */
+  padding: 20px;
 }
 
+/* Placeholder Stili */
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
+  color: #6c757d; /* Daha yumuşak gri placeholder rengi */
   text-align: end;
 }
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* Form Kontrollerine Gölgelendirme ve Stil */
+.form-control, .form-check-input {
+  border-radius: 5px; /* Yuvarlatılmış kenarlar */
+  border: 1px solid #007700; /* Hafif gri kenarlık */
+  padding: 12px 15px; /* Padding arttırıldı */
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus, .form-check-input:focus {
+  border-color: #533800; /* Focus durumunda mavi renk */
+  box-shadow: 0 0 0 0.2rem rgba(255, 136, 0, 0.25); /* Hafif mavi gölge */
+}
+
+/* Responsive Tasarım İçin Yumuşatma */
+@media (max-width: 768px) {
+  body {
+    padding: 15px; /* Küçük ekranlar için padding küçültüldü */
+  }
+
+  .btn {
+    padding: 8px 15px; /* Buton boyutu küçük ekranlarda biraz küçültüldü */
+  }
+}
+
+.container {
+  margin-top: 30px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.col-md-6 {
+  flex: 1;
+  padding: 10px;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+
+
