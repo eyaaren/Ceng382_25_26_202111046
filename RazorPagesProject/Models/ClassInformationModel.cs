@@ -14,7 +14,10 @@ namespace RazorPagesProject.Models
         // Description of the class
         public string Description { get; set; }
 
-        // Constructor (optional, for initializing properties)
+        // Parametresiz constructor (zorunlu)
+        public ClassInformationModel() { }
+
+        // Parametreli constructor
         public ClassInformationModel(string className, int studentCount, string description)
         {
             ClassName = className;
@@ -22,5 +25,13 @@ namespace RazorPagesProject.Models
             Description = description;
         }
     }
-}
 
+    // Yeni tablo modeli (sadece tablo gösterimi için)
+    public class ClassInformationTable
+    {
+        public int Id { get; set; } // Tabloda gösterilmeyecek ama işlemlerde kullanılacak
+        public string ClassName { get; set; }
+        public int StudentCount { get; set; }
+        public string Description { get; set; }
+    }
+}

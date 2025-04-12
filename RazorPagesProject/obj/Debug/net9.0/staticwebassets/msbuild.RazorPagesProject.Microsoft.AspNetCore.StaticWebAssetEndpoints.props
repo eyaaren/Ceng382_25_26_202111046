@@ -1,16 +1,16 @@
 ﻿<Project>
   <ItemGroup>
+    <StaticWebAssetEndpoint Include="_content/RazorPagesProject/css/site.bqeyc884ji.css">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\site.css'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"bqeyc884ji"},{"Name":"integrity","Value":"sha256-7VSib7NtPUmchw39Ntw3mIT2n16JH8hHdAgXrbEhymI="},{"Name":"label","Value":"_content/RazorPagesProject/css/site.css"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"2689"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u00227VSib7NtPUmchw39Ntw3mIT2n16JH8hHdAgXrbEhymI=\u0022"},{"Name":"Last-Modified","Value":"Sat, 12 Apr 2025 03:08:49 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/RazorPagesProject/css/site.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\site.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-jP/2EicYW5S8IX7E5ZXh9M8QqICCqsvjhThYs6x/chU="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"2631"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022jP/2EicYW5S8IX7E5ZXh9M8QqICCqsvjhThYs6x/chU=\u0022"},{"Name":"Last-Modified","Value":"Tue, 25 Mar 2025 09:58:25 GMT"}]]]></ResponseHeaders>
-    </StaticWebAssetEndpoint>
-    <StaticWebAssetEndpoint Include="_content/RazorPagesProject/css/site.gl39m0vvam.css">
-      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\site.css'))</AssetFile>
-      <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"gl39m0vvam"},{"Name":"integrity","Value":"sha256-jP/2EicYW5S8IX7E5ZXh9M8QqICCqsvjhThYs6x/chU="},{"Name":"label","Value":"_content/RazorPagesProject/css/site.css"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"2631"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022jP/2EicYW5S8IX7E5ZXh9M8QqICCqsvjhThYs6x/chU=\u0022"},{"Name":"Last-Modified","Value":"Tue, 25 Mar 2025 09:58:25 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-7VSib7NtPUmchw39Ntw3mIT2n16JH8hHdAgXrbEhymI="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"2689"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u00227VSib7NtPUmchw39Ntw3mIT2n16JH8hHdAgXrbEhymI=\u0022"},{"Name":"Last-Modified","Value":"Sat, 12 Apr 2025 03:08:49 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/RazorPagesProject/favicon.61n19gt1b8.ico">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\favicon.ico'))</AssetFile>

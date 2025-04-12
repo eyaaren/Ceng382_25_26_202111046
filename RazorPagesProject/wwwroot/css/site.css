@@ -2,7 +2,7 @@
 html {
   font-size: 14px;
   font-family: 'Arial', sans-serif; /* Daha modern bir font ekledik */
-  background-color: #f4f7fc; /* Hafif gri-mavi arka plan */
+  background-color: #e6e2e4; /* Hafif gri-mavi arka plan */
 }
 
 @media (min-width: 768px) {
@@ -12,20 +12,22 @@ html {
 }
 
 /* Buton Stili */
-.btn {
-  background-color: #007f04; /* Ana renk mavi */
-  color: white; /* Yazı rengi beyaz */
+.btn-primary {
   border-radius: 5px; /* Köşeleri yuvarlat */
-  padding: 10px 20px; /* Butonun iç padding değerini ayarladık */
-  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Geçiş efekti ekledik */
+  padding: 10px 15px !important; /* Butonun iç padding değerini ayarladık */
+  font-size: 18px; /* Yazı boyutunu belirledik */
+  text-align: center; /* Metni ortaladık */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;  /* Geçiş efekti ekledik */
 }
 
-.btn:hover {
-  background-color: #49a800; /* Hover durumunda daha koyu mavi */
+.btn-primary:hover {
+  background-color: #3f6687 !important; /* Hover durumunda daha koyu mavi */
+  cursor: pointer; 
+  color: white !important;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #007bff; /* Buton focus rengini değiştirdik */
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #0062ff; /* Buton focus rengini değiştirdik */
 }
 
 /* Sayfa Arka Planı ve Margin */
@@ -40,8 +42,8 @@ html, body {
 
 body {
   margin-bottom: 60px;
-  background-color: #96ce7c94; /* Beyaz arka plan */
-  color: #2a2a2a; /* Koyu gri metin */
+  background-color: #e6e2e4; /* Beyaz arka plan */
+  color: #3f6687; /* Koyu gri metin */
   padding: 20px;
 }
 
@@ -58,14 +60,14 @@ body {
 /* Form Kontrollerine Gölgelendirme ve Stil */
 .form-control, .form-check-input {
   border-radius: 5px; /* Yuvarlatılmış kenarlar */
-  border: 1px solid #007700; /* Hafif gri kenarlık */
+  border: 3px solid #8498b0; /* Hafif gri kenarlık */
   padding: 12px 15px; /* Padding arttırıldı */
   transition: border 0.3s ease, box-shadow 0.3s ease;
 }
 
 .form-control:focus, .form-check-input:focus {
-  border-color: #533800; /* Focus durumunda mavi renk */
-  box-shadow: 0 0 0 0.2rem rgba(255, 136, 0, 0.25); /* Hafif mavi gölge */
+  border-color: #2d354b; /* Focus durumunda mavi renk */
+  box-shadow: 0 0 0 0.3rem #c0c2d9; 
 }
 
 /* Responsive Tasarım İçin Yumuşatma */
@@ -97,6 +99,8 @@ body {
 h2 {
   margin-bottom: 20px;
 }
+
+
 
 
 
