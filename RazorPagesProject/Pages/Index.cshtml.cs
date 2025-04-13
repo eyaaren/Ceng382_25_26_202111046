@@ -1,23 +1,58 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RazorPagesProject.Models;
+using RazorPagesProject.Helpers;
+using System.Text;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using Newtonsoft.Json;
+using System; // Console için eklendi
 
 namespace RazorPagesProject.Pages
 {
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
+        private static readonly Random _random = new Random(); // Random nesnesi eklendi
+
+        // Static constructor ekliyoruz
+        static IndexModel()
+        {
+            // Sadece liste boşsa fake veri ekle
+            if (AllClasses.Count == 0)
+            {
+                GenerateFakeData(100);
+            }
+        }
 
         public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
         }
 
-        // Kalıcı liste (test amaçlı)
+        // Fake veri oluşturma metodu
+        private static void GenerateFakeData(int count)
+        {
+            var classNames = new[] {"Mathematics", "Physics", "Chemistry", "Biology", "History",
+"Literature", "Geography", "Philosophy", "English", "Computer"};
+            var descriptions = new[]{ "Basic", "Advanced", "Practical", "Theoretical", "Laboratory",
+"Online", "Face to face", "Mixed", "Project", "Seminar" };
+
+            for (int i = 1; i <= count; i++)
+            {
+                AllClasses.Add(new ClassInformationModel
+                {
+                    Id = i,
+                    ClassName = $"{classNames[_random.Next(classNames.Length)]} {_random.Next(1, 5)}0{i % 10}",
+                    StudentCount = _random.Next(15, 45),
+                    Description = $"{descriptions[_random.Next(descriptions.Length)]} ders - Grup {_random.Next(1, 10)}"
+                });
+            }
+        }
+
+        // Tüm sınıflar burada tutuluyor
         public static List<ClassInformationModel> AllClasses { get; set; } = new();
 
+        // Sayfada gösterilecek sınıflar
         public List<ClassInformationTable> ClassesForDisplay { get; set; } = new();
 
         [BindProperty(SupportsGet = true)]
@@ -35,28 +70,64 @@ namespace RazorPagesProject.Pages
         [BindProperty]
         public ClassInformationModel EditClass { get; set; } = new();
 
+        public class ExportRequest
+        {
+            public List<string> SelectedColumns { get; set; } = new();
+            public string? Filter { get; set; }
+            public int PageNumber { get; set; }
+        }
+
+        // JSON Export işlemi
+        public IActionResult OnPostExportJson([FromBody] ExportRequest request)
+        {
+            var data = AllClasses.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(request.Filter))
+            {
+                data = data.Where(x => x.ClassName.Contains(request.Filter, StringComparison.OrdinalIgnoreCase));
+            }
+
+            data = data.Skip((request.PageNumber - 1) * PageSize).Take(PageSize);
+
+            var result = data.Select(x => new ClassInformationTable
+            {
+                Id = x.Id,
+                ClassName = x.ClassName,
+                StudentCount = x.StudentCount,
+                Description = x.Description
+            }).ToList();
+
+            var json = Utils.Instance.ExportToJson(result, request.SelectedColumns);
+            return File(Encoding.UTF8.GetBytes(json), "application/json", "exported_data.json");
+        }
+
+        // Sayfa yüklendiğinde verileri getir
         public void OnGet()
         {
-            var filtered = AllClasses.AsQueryable();
+             Console.WriteLine($"AllClasses count: {AllClasses.Count}");
+            var query = AllClasses.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(Filter))
             {
-                filtered = filtered.Where(c => c.ClassName.Contains(Filter, StringComparison.OrdinalIgnoreCase));
+                query = query.Where(c => c.ClassName.Contains(Filter, StringComparison.OrdinalIgnoreCase));
             }
 
-            int totalItems = filtered.Count();
-            TotalPages = (int)Math.Ceiling(totalItems / (double)PageSize);
-            filtered = filtered.Skip((PageNumber - 1) * PageSize).Take(PageSize);
+            TotalPages = (int)Math.Ceiling(query.Count() / (double)PageSize);
 
-            ClassesForDisplay = filtered.Select(c => new ClassInformationTable
-            {
-                Id = c.Id,
-                ClassName = c.ClassName,
-                StudentCount = c.StudentCount,
-                Description = c.Description
-            }).ToList();
+            ClassesForDisplay = query
+                .Skip((PageNumber - 1) * PageSize)
+                .Take(PageSize)
+                .Select(c => new ClassInformationTable
+                {
+                    Id = c.Id,
+                    ClassName = c.ClassName,
+                    StudentCount = c.StudentCount,
+                    Description = c.Description
+                })
+                .ToList();
         }
 
+        // Yeni sınıf ekleme
         public IActionResult OnPost()
         {
             if (ModelState.IsValid)
@@ -70,6 +141,7 @@ namespace RazorPagesProject.Pages
             return Page();
         }
 
+        // Sınıf düzenleme
         public IActionResult OnPostEdit()
         {
             var existing = AllClasses.FirstOrDefault(c => c.Id == EditClass.Id);
@@ -83,6 +155,7 @@ namespace RazorPagesProject.Pages
             return RedirectToPage("/Index");
         }
 
+        // Sınıf silme
         public IActionResult OnGetDelete(int id)
         {
             var classToRemove = AllClasses.FirstOrDefault(c => c.Id == id);

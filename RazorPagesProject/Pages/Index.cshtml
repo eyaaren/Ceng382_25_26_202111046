@@ -9,7 +9,7 @@
 <div class="container mt-4">
     <!-- Add New Class Form -->
     <div class="row justify-content-center">
-        <div class="col-md-6 form-wrapper">
+        <div class="col-md-4 form-wrapper">
             <h2 class="text-center">Add a New Class</h2>
             <form method="post" asp-page="Index">
                 <div class="form-group">
@@ -44,12 +44,12 @@
                 </div>
             </form>
 
-            <table class="table">
+            <table class="table" id="classTable">
                 <thead>
                     <tr>
-                        <th>Class Name</th>
-                        <th>Student Count</th>
-                        <th>Description</th>
+                        <th class="column-header" data-column="ClassName">Class Name</th>
+                        <th class="column-header" data-column="StudentCount">Student Count</th>
+                        <th class="column-header" data-column="Description">Description</th>
                         <th>Edit</th>
                         <th>Delete</th>
                     </tr>
@@ -110,6 +110,9 @@
                 </div>
             </div>
 
+            <!-- Single Export Button -->
+            <button id="export" class="btn btn-secondary" style="background-color: #3f6687; color: #f8f6f9; font-size: 16px;">Export</button>
+
             <!-- Pagination -->
             <nav>
                 <ul class="pagination justify-content-center">
@@ -140,7 +143,7 @@
 </div>
 
 <style>
-    .btn-secondary{
+    .btn-secondary {
         font-size: 16px;
     }
 
@@ -149,10 +152,23 @@
         color: #3f6687 !important;
         cursor: pointer;
     }
+
+    .form-wrapper {
+        max-width: 400px; /* Smaller width for the form */
+        padding: 20px; /* Adjusted padding */
+    }
+
+    /* Add styles for the selected column */
+    .column-header.selected {
+        background-color: #c0c2d9;
+        color: #3f6687;
+        cursor: pointer;
+    }
 </style>
 
 @section Scripts {
     <script>
+        // Edit modal open function
         function openEditModal(id, name, count, description) {
             document.getElementById("editId").value = id;
             document.getElementById("editName").value = name;
@@ -162,5 +178,45 @@
             var editModal = new bootstrap.Modal(document.getElementById('editModal'));
             editModal.show();
         }
+
+        // Column selection on table header click
+        document.querySelectorAll('.column-header').forEach(header => {
+            header.addEventListener('click', function () {
+                const column = header.getAttribute('data-column');
+                const isChecked = header.classList.contains('selected');
+                
+                // Toggle selected class and apply visual cue
+                if (isChecked) {
+                    header.classList.remove('selected');
+                } else {
+                    header.classList.add('selected');
+                }
+            });
+        });
+
+        // Export Data (Filtered or Unfiltered)
+        document.getElementById('export').addEventListener('click', function() {
+            const selectedColumns = [];
+            document.querySelectorAll('.column-header.selected').forEach(header => {
+                selectedColumns.push(header.getAttribute('data-column'));
+            });
+
+            const isFiltered = '@Model.Filter'.length > 0;
+
+            fetch('/Index?handler=ExportData', {
+                method: 'POST',
+                body: JSON.stringify({ selectedColumns, isFiltered }),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'exported_data.json';
+                link.click();
+            });
+        });
     </script>
+
+    
 }

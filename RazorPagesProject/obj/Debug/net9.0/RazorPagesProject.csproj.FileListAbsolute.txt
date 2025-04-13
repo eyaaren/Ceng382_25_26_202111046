@@ -19,7 +19,6 @@
 /Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/obj/Debug/net9.0/scopedcss/bundle/RazorPagesProject.styles.css
 /Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/obj/Debug/net9.0/scopedcss/projectbundle/RazorPagesProject.bundle.scp.css
 /Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/obj/Debug/net9.0/compressed/iumntnzj1n-61n19gt1b8.gz
-/Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/obj/Debug/net9.0/compressed/999jexk0bj-xtxxf3hu2r.gz
 /Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/obj/Debug/net9.0/compressed/wf5222wrxs-bqjiyaj88i.gz
 /Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/obj/Debug/net9.0/compressed/hqr7p2bm0d-c2jlpeoesf.gz
 /Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/obj/Debug/net9.0/compressed/vlgv4ql13d-erw9l3u2r3.gz
@@ -95,4 +94,8 @@
 /Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/obj/Debug/net9.0/ref/RazorPagesProject.dll
 /Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/obj/Debug/net9.0/compressed/qb54eiep0q-t5qv4nvzqu.gz
 /Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/obj/Debug/net9.0/compressed/u4xt045i8q-t5qv4nvzqu.gz
-/Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/obj/Debug/net9.0/compressed/2bxjzfls5y-bqeyc884ji.gz
+/Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/bin/Debug/net9.0/Newtonsoft.Json.dll
+/Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/obj/Debug/net9.0/RazorPagesProject.csproj.AssemblyReference.cache
+/Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/obj/Debug/net9.0/RazorPag.6B3CF2B8.Up2Date
+/Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/obj/Debug/net9.0/compressed/2bxjzfls5y-mb9s6qtoa3.gz
+/Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/obj/Debug/net9.0/compressed/999jexk0bj-epkurzv2uj.gz
