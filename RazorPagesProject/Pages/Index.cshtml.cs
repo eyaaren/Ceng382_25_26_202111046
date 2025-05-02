@@ -11,6 +11,7 @@ namespace RazorPagesProject.Pages
 {
     public class IndexModel : PageModel
     {
+        public string WelcomeMessage { get; set; }
         private readonly ILogger<IndexModel> _logger;
         private static readonly Random _random = new Random(); // Random nesnesi eklendi
 
@@ -33,9 +34,9 @@ namespace RazorPagesProject.Pages
         private static void GenerateFakeData(int count)
         {
             var classNames = new[] {"Mathematics", "Physics", "Chemistry", "Biology", "History",
-"Literature", "Geography", "Philosophy", "English", "Computer"};
+                "Literature", "Geography", "Philosophy", "English", "Computer"};
             var descriptions = new[]{ "Basic", "Advanced", "Practical", "Theoretical", "Laboratory",
-"Online", "Face to face", "Mixed", "Project", "Seminar" };
+                "Online", "Face to face", "Mixed", "Project", "Seminar" };
 
             for (int i = 1; i <= count; i++)
             {
@@ -102,30 +103,62 @@ namespace RazorPagesProject.Pages
         }
 
         // Sayfa yüklendiğinde verileri getir
-        public void OnGet()
+      public void OnGet()
+{
+    // 🍪 Eğer kullanıcı çerezleri kabul ettiyse cookie yaz
+    var acceptCookies = Request.Query["acceptCookies"];
+    if (acceptCookies == "true")
+    {
+        Response.Cookies.Append("cookieConsent", "true", new CookieOptions
         {
-             Console.WriteLine($"AllClasses count: {AllClasses.Count}");
-            var query = AllClasses.AsQueryable();
+            Expires = DateTimeOffset.UtcNow.AddYears(1),
+            IsEssential = true // GDPR uyumu için
+        });
 
-            if (!string.IsNullOrWhiteSpace(Filter))
-            {
-                query = query.Where(c => c.ClassName.Contains(Filter, StringComparison.OrdinalIgnoreCase));
-            }
+        // Kullanıcı linke tıkladıktan sonra URL'deki ?acceptCookies=true kısmını temizlemek için sayfayı yenile
+        Response.Redirect(Request.Path);
+        return;
+    }
 
-            TotalPages = (int)Math.Ceiling(query.Count() / (double)PageSize);
+    // 🔐 Session'dan kullanıcı bilgilerini al
+    var username = HttpContext.Session.GetString("username");
+    var role = HttpContext.Session.GetString("role");
+    var message = HttpContext.Session.GetString("welcomeMessage");
 
-            ClassesForDisplay = query
-                .Skip((PageNumber - 1) * PageSize)
-                .Take(PageSize)
-                .Select(c => new ClassInformationTable
-                {
-                    Id = c.Id,
-                    ClassName = c.ClassName,
-                    StudentCount = c.StudentCount,
-                    Description = c.Description
-                })
-                .ToList();
-        }
+    // Giriş yapılmamışsa login sayfasına yönlendir
+    if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(role))  // İF EKLE 
+    {
+        Response.Redirect("/Login");
+        return;
+    }
+
+    // Hoş geldin mesajı
+    WelcomeMessage = message ?? "";
+
+    // 🔍 Filtreleme ve sayfalama
+    var query = AllClasses.AsQueryable();
+
+    if (!string.IsNullOrWhiteSpace(Filter))
+    {
+        query = query.Where(c => c.ClassName.Contains(Filter, StringComparison.OrdinalIgnoreCase));
+    }
+
+    TotalPages = (int)Math.Ceiling(query.Count() / (double)PageSize);
+
+    ClassesForDisplay = query
+        .Skip((PageNumber - 1) * PageSize)
+        .Take(PageSize)
+        .Select(c => new ClassInformationTable
+        {
+            Id = c.Id,
+            ClassName = c.ClassName,
+            StudentCount = c.StudentCount,
+            Description = c.Description
+        })
+        .ToList();
+}
+
+
 
         // Yeni sınıf ekleme
         public IActionResult OnPost()

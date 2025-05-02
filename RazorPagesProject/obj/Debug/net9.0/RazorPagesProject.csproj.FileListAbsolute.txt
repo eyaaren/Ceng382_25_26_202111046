@@ -99,3 +99,4 @@
 /Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/obj/Debug/net9.0/RazorPag.6B3CF2B8.Up2Date
 /Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/obj/Debug/net9.0/compressed/2bxjzfls5y-mb9s6qtoa3.gz
 /Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/obj/Debug/net9.0/compressed/999jexk0bj-epkurzv2uj.gz
+/Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/obj/Debug/net9.0/compressed/w4sgncewfm-wgvo9b23b3.gz

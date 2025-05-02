@@ -9,6 +9,10 @@
       "PackagePath": "staticwebassets/css/site.css"
     },
     {
+      "Id": "/Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/wwwroot/data/users.json",
+      "PackagePath": "staticwebassets/data/users.json"
+    },
+    {
       "Id": "/Users/yarenakdogan/Ceng382_25_26_202111046/RazorPagesProject/wwwroot/favicon.ico",
       "PackagePath": "staticwebassets/favicon.ico"
     },
