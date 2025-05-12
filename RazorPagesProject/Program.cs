@@ -1,7 +1,16 @@
+using Microsoft.EntityFrameworkCore;
+using RazorPagesProject.Data; // SchoolDbContext sınıfının bulunduğu namespace
+
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<SchoolDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SchoolDbConnection")));
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+
 
 // ✨ Session ayarını ekle
 builder.Services.AddSession(options =>

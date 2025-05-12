@@ -15,6 +15,6 @@ public class LogoutModel : PageModel
         }
 
         // Kullanıcıyı Login sayfasına yönlendir
-        return Redirect("/Login");
+        return RedirectToPage("/Login");
     }
 }

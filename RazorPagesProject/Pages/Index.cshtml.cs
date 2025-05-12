@@ -2,59 +2,44 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RazorPagesProject.Models;
 using RazorPagesProject.Helpers;
+using Microsoft.EntityFrameworkCore;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
-using System; // Console için eklendi
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using RazorPagesProject.Data;
 
 namespace RazorPagesProject.Pages
 {
     public class IndexModel : PageModel
     {
-        public string WelcomeMessage { get; set; }
+        private readonly SchoolDbContext _context;
         private readonly ILogger<IndexModel> _logger;
-        private static readonly Random _random = new Random(); // Random nesnesi eklendi
 
-        // Static constructor ekliyoruz
-        static IndexModel()
+        public IndexModel(SchoolDbContext context, ILogger<IndexModel> logger)
         {
-            // Sadece liste boşsa fake veri ekle
-            if (AllClasses.Count == 0)
-            {
-                GenerateFakeData(100);
-            }
-        }
-
-        public IndexModel(ILogger<IndexModel> logger)
-        {
+            _context = context;
             _logger = logger;
+
+            // CS8618 hatalarını önlemek için başlatmalar
+            WelcomeMessage = string.Empty;
+            ClassList = new List<Class>();
+            NewClass = new Class();
+            EditClass = new Class();
         }
 
-        // Fake veri oluşturma metodu
-        private static void GenerateFakeData(int count)
-        {
-            var classNames = new[] {"Mathematics", "Physics", "Chemistry", "Biology", "History",
-                "Literature", "Geography", "Philosophy", "English", "Computer"};
-            var descriptions = new[]{ "Basic", "Advanced", "Practical", "Theoretical", "Laboratory",
-                "Online", "Face to face", "Mixed", "Project", "Seminar" };
-
-            for (int i = 1; i <= count; i++)
-            {
-                AllClasses.Add(new ClassInformationModel
-                {
-                    Id = i,
-                    ClassName = $"{classNames[_random.Next(classNames.Length)]} {_random.Next(1, 5)}0{i % 10}",
-                    StudentCount = _random.Next(15, 45),
-                    Description = $"{descriptions[_random.Next(descriptions.Length)]} ders - Grup {_random.Next(1, 10)}"
-                });
-            }
-        }
-
-        // Tüm sınıflar burada tutuluyor
-        public static List<ClassInformationModel> AllClasses { get; set; } = new();
+        public string WelcomeMessage { get; set; }
 
         // Sayfada gösterilecek sınıflar
-        public List<ClassInformationTable> ClassesForDisplay { get; set; } = new();
+        public IList<Class> ClassList { get; set; }
+
+        [BindProperty]
+        public Class NewClass { get; set; }  // ✅ Yeni sınıf eklemek için
+
+        [BindProperty]
+        public Class EditClass { get; set; } // ✅ Mevcut sınıfı düzenlemek için
 
         [BindProperty(SupportsGet = true)]
         public string? Filter { get; set; }
@@ -65,136 +50,76 @@ namespace RazorPagesProject.Pages
         public int PageSize { get; set; } = 10;
         public int TotalPages { get; set; }
 
-        [BindProperty]
-        public ClassInformationModel NewClass { get; set; } = new();
-
-        [BindProperty]
-        public ClassInformationModel EditClass { get; set; } = new();
-
-        public class ExportRequest
-        {
-            public List<string> SelectedColumns { get; set; } = new();
-            public string? Filter { get; set; }
-            public int PageNumber { get; set; }
-        }
-
-        // JSON Export işlemi
-        public IActionResult OnPostExportJson([FromBody] ExportRequest request)
-        {
-            var data = AllClasses.AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(request.Filter))
-            {
-                data = data.Where(x => x.ClassName.Contains(request.Filter, StringComparison.OrdinalIgnoreCase));
-            }
-
-            data = data.Skip((request.PageNumber - 1) * PageSize).Take(PageSize);
-
-            var result = data.Select(x => new ClassInformationTable
-            {
-                Id = x.Id,
-                ClassName = x.ClassName,
-                StudentCount = x.StudentCount,
-                Description = x.Description
-            }).ToList();
-
-            var json = Utils.Instance.ExportToJson(result, request.SelectedColumns);
-            return File(Encoding.UTF8.GetBytes(json), "application/json", "exported_data.json");
-        }
-
         // Sayfa yüklendiğinde verileri getir
-      public void OnGet()
+        public async Task OnGetAsync()
 {
-    // 🍪 Eğer kullanıcı çerezleri kabul ettiyse cookie yaz
-    var acceptCookies = Request.Query["acceptCookies"];
-    if (acceptCookies == "true")
+    // Kullanıcının oturum açıp açmadığını kontrol et
+    if (string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
     {
-        Response.Cookies.Append("cookieConsent", "true", new CookieOptions
-        {
-            Expires = DateTimeOffset.UtcNow.AddYears(1),
-            IsEssential = true // GDPR uyumu için
-        });
-
-        // Kullanıcı linke tıkladıktan sonra URL'deki ?acceptCookies=true kısmını temizlemek için sayfayı yenile
-        Response.Redirect(Request.Path);
-        return;
-    }
-
-    // 🔐 Session'dan kullanıcı bilgilerini al
-    var username = HttpContext.Session.GetString("username");
-    var role = HttpContext.Session.GetString("role");
-    var message = HttpContext.Session.GetString("welcomeMessage");
-
-    // Giriş yapılmamışsa login sayfasına yönlendir
-    if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(role))  // İF EKLE 
-    {
+        // Eğer giriş yapılmamışsa, Login sayfasına yönlendir
         Response.Redirect("/Login");
-        return;
+        return; // Yönlendirme yapıldıktan sonra fonksiyonu sonlandır
     }
 
-    // Hoş geldin mesajı
-    WelcomeMessage = message ?? "";
+    var query = _context.Classes.AsQueryable();
 
-    // 🔍 Filtreleme ve sayfalama
-    var query = AllClasses.AsQueryable();
-
+    // Filtreleme işlemi
     if (!string.IsNullOrWhiteSpace(Filter))
     {
-        query = query.Where(c => c.ClassName.Contains(Filter, StringComparison.OrdinalIgnoreCase));
+        query = query.Where(c => c.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase));
     }
 
-    TotalPages = (int)Math.Ceiling(query.Count() / (double)PageSize);
+    // Sayfa sayısını hesapla
+    TotalPages = (int)Math.Ceiling(await query.CountAsync() / (double)PageSize);
 
-    ClassesForDisplay = query
+    // Sınıf listesini sayfalandırarak al
+    ClassList = await query
         .Skip((PageNumber - 1) * PageSize)
         .Take(PageSize)
-        .Select(c => new ClassInformationTable
-        {
-            Id = c.Id,
-            ClassName = c.ClassName,
-            StudentCount = c.StudentCount,
-            Description = c.Description
-        })
-        .ToList();
+        .ToListAsync();
+
+    // Hoş geldiniz mesajı
+    WelcomeMessage = "Hoş geldiniz, " + HttpContext.Session.GetString("username");
 }
 
-
-
         // Yeni sınıf ekleme
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (ModelState.IsValid)
             {
-                NewClass.Id = AllClasses.Any() ? AllClasses.Max(c => c.Id) + 1 : 1;
-                AllClasses.Add(NewClass);
+                _context.Classes.Add(NewClass);
+                await _context.SaveChangesAsync();
                 return RedirectToPage("/Index");
             }
 
-            OnGet();
             return Page();
         }
 
         // Sınıf düzenleme
-        public IActionResult OnPostEdit()
+        public async Task<IActionResult> OnPostEditAsync()
         {
-            var existing = AllClasses.FirstOrDefault(c => c.Id == EditClass.Id);
-            if (existing != null)
+            var existingClass = await _context.Classes.FindAsync(EditClass.Id);
+            if (existingClass != null)
             {
-                existing.ClassName = EditClass.ClassName;
-                existing.StudentCount = EditClass.StudentCount;
-                existing.Description = EditClass.Description;
+                existingClass.Name = EditClass.Name;
+                existingClass.PersonCount = EditClass.PersonCount;
+                existingClass.Description = EditClass.Description;
+                existingClass.IsActive = EditClass.IsActive;
+
+                await _context.SaveChangesAsync();
             }
 
             return RedirectToPage("/Index");
         }
 
         // Sınıf silme
-        public IActionResult OnGetDelete(int id)
+        public async Task<IActionResult> OnGetDeleteAsync(int id)
         {
-            var classToRemove = AllClasses.FirstOrDefault(c => c.Id == id);
+            var classToRemove = await _context.Classes.FindAsync(id);
             if (classToRemove != null)
             {
-                AllClasses.Remove(classToRemove);
+                _context.Classes.Remove(classToRemove);
+                await _context.SaveChangesAsync();
             }
 
             return RedirectToPage("/Index");
